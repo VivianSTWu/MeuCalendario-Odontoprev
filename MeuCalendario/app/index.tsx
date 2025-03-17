@@ -1,19 +1,18 @@
-import { View, Text } from 'react-native'
+import { View, Text, TouchableOpacity } from 'react-native'
 import React from 'react'
-import { StatusBar } from 'expo-status-bar';
+import { Link } from 'expo-router';
 
 
 const Index = () => {
     return (
-        <View>
+        <View className='flex container px-6 justify-end items-center'>
               <View>
-                <Text style={{color:"#fff"}}>Meu Calendário</Text>
+                <Text className='pb-6 text-xl text-center mt-5'>Para usar esta ferramenta, precisamos que você nos informe algumas coisinhas, tudo bem?</Text>
+                <Text className='pb-6 text-xl text-center'>Você só vai precisar preencher isto uma vez.</Text>
               </View>
-              <View>
-                <Text style={{color:"#fff"}}>Para usar esta ferramenta, precisamos que você nos informe algumas coisinhas, tudo bem?</Text>
-                <Text>Você só vai precisar preencher isto uma vez.</Text>
-              </View>
-            <StatusBar style="auto" />
+            <TouchableOpacity className='flex bg-blue-700 py-4 px-4 rounded-md w-auto justify-end items-center mt-8' onPress={() => {}}>
+                <Link href={"/form-inicial"} className='color-white text-xl'>Vamos lá!</Link>
+            </TouchableOpacity>
         </View>
     );
 };

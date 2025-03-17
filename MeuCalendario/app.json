@@ -20,7 +20,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.vivianwu.MeuCalendario"
     },
     "web": {
       "favicon": "./assets/favicon.png",
@@ -28,6 +29,14 @@
     },
     "plugins": [
       "expo-router"
-    ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "f50d7f88-7c9b-4ef6-84d5-635eedc87e38"
+      }
+    }
   }
 }
