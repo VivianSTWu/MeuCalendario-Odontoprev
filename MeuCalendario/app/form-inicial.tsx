@@ -111,9 +111,8 @@ const FormInicial = () => {
           className="flex-row items-start mb-1 py-1.5"
         >
           <View
-            className={`w-6 h-6 border-2 rounded-md ${
-              selected.includes(q.id) ? "bg-blue-500 border-blue-500" : "border-gray-500"
-            }`}
+            className={`w-6 h-6 border-2 rounded-md ${selected.includes(q.id) ? "bg-blue-500 border-blue-500" : "border-gray-500"
+              }`}
           />
           <Text className="ml-2 text-lg">{q.text}</Text>
         </TouchableOpacity>
@@ -129,9 +128,8 @@ const FormInicial = () => {
           className="flex-row items-start mb-1 py-1.5"
         >
           <View
-            className={`w-6 h-6 border-2 rounded-md ${
-              selected.includes(q.id) ? "bg-blue-500 border-blue-500" : "border-gray-500"
-            }`}
+            className={`w-6 h-6 border-2 rounded-md ${selected.includes(q.id) ? "bg-blue-500 border-blue-500" : "border-gray-500"
+              }`}
           />
           <Text className="ml-2 text-lg">{q.text}</Text>
         </TouchableOpacity>
@@ -145,17 +143,17 @@ const FormInicial = () => {
           className="flex-row items-center mb-1 py-1.5"
         >
           <View
-            className={`w-6 h-6 border-2 rounded-full ${
-              selectedRadio === q.id ? "bg-blue-500 border-blue-500" : "border-gray-500"
-            }`}
+            className={`w-6 h-6 border-2 rounded-full ${selectedRadio === q.id ? "bg-blue-500 border-blue-500" : "border-gray-500"
+              }`}
           />
           <Text className="ml-2 text-lg">{q.text}</Text>
         </TouchableOpacity>
       ))}
-
-      <TouchableOpacity className="mt-6 p-4 bg-blue-600 rounded-lg items-center">
-        <Link href={"/calendario"} className='color-white text-xl'>Enviar</Link>
-      </TouchableOpacity>
+      <Link href={"/calendario"} asChild>
+        <TouchableOpacity className="mt-6 p-4 bg-blue-600 rounded-lg items-center">
+          <Text className='color-white text-xl'>Enviar</Text>
+        </TouchableOpacity>
+      </Link>
     </ScrollView>
   );
 };

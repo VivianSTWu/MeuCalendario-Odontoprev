@@ -6,13 +6,15 @@ import { Link } from 'expo-router';
 const Index = () => {
     return (
         <View className='flex container px-6 justify-end items-center'>
-              <View>
+            <View>
                 <Text className='pb-6 text-xl text-center mt-5'>Para usar esta ferramenta, precisamos que você nos informe algumas coisinhas, tudo bem?</Text>
                 <Text className='pb-6 text-xl text-center'>Você só vai precisar preencher isto uma vez.</Text>
-              </View>
-            <TouchableOpacity className='flex bg-blue-700 py-4 px-4 rounded-md w-auto justify-end items-center mt-8' onPress={() => {}}>
-                <Link href={"/form-inicial"} className='color-white text-xl'>Vamos lá!</Link>
-            </TouchableOpacity>
+            </View>
+            <Link href={"/form-inicial"} asChild>
+                <TouchableOpacity className='flex bg-blue-700 py-4 px-4 rounded-md w-auto justify-end items-center mt-8' onPress={() => { }}>
+                    <Text className='color-white text-xl'>Vamos lá!</Text>
+                </TouchableOpacity>
+            </Link>
         </View>
     );
 };
