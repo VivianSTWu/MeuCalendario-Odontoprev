@@ -1,5 +1,7 @@
+import { Link } from "expo-router";
+import { Plus } from "lucide-react-native";
 import React, { useState, useMemo } from "react";
-import { Text, View, ScrollView, FlatList } from "react-native";
+import { Text, View, ScrollView, FlatList, TouchableOpacity } from "react-native";
 import { Calendar } from "react-native-calendars";
 
 const Calendario = () => {
@@ -126,6 +128,14 @@ const Calendario = () => {
 
   return (
     <View className="flex-col">
+      <View className="flex-row justify-between items-center px-6 py-4">
+        <Text className="text-xl font-bold">CALENDÁRIO</Text>
+        <Link href={"/add-evento"} asChild>
+          <TouchableOpacity>
+            <Plus size={24} color="blue" />
+          </TouchableOpacity>
+        </Link>
+      </View>
       <View className="px-6">
         <Calendar
           current={today}
