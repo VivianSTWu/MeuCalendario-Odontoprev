@@ -113,18 +113,32 @@ const Calendario = () => {
     return markedDates;
   };
 
-  const renderItem = ({ item }) => (
-    <View className="flex flex-row py-2">
-      <View className="basis-1/4 p-2 flex justify-center items-center">
-        <Text className="text-blue-900 font-bold text-4xl">
-          {parseInt(item.date.split("-")[2], 10)}
-        </Text>
+  const renderItem = ({ item }) => {
+    // Verificando o que está sendo coletado
+    console.log("Item do evento:", item);
+  
+    return (
+      <View className="flex flex-row py-2">
+        <View className="basis-1/4 p-2 flex justify-center items-center">
+          <Text className="text-blue-900 font-bold text-4xl">
+            {parseInt(item.date.split("-")[2], 10)}
+          </Text>
+        </View>
+        <View className="basis-3/4 pl-5 flex justify-center">
+          <Text className="text-black text-lg">{item.title}</Text>
+        </View>
       </View>
-      <View className="basis-3/4 pl-5 flex justify-center">
-        <Text className="text-black text-lg">{item.title}</Text>
-      </View>
-    </View>
-  );
+    );
+  };
+
+  const formatDate = (date) => {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = (d.getMonth() + 1).toString().padStart(2, "0");
+    const day = d.getDate().toString().padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+  
 
   return (
     <View className="flex-col">
@@ -163,7 +177,13 @@ const Calendario = () => {
                   {eventosMes.length > 0 ? (
                     <FlatList
                       data={eventosMes}
-                      renderItem={renderItem}
+                      renderItem={({ item }) => (
+                        <Link href={`/edit-consulta`} asChild>
+                          <TouchableOpacity>
+                            {renderItem({ item })}
+                          </TouchableOpacity>
+                        </Link>
+                      )}
                       keyExtractor={(item) => item.date.toString()}
                       scrollEnabled={false}
                     />
