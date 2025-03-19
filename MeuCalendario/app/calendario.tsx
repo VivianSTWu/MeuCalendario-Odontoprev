@@ -12,7 +12,15 @@ const Calendario = () => {
     { date: "2024-12-25", title: "Natal" },
   ];
 
-  const today = new Date().toISOString().split("T")[0];
+  const today = new Date().toLocaleDateString("pt-BR", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  })
+    .split("/")
+    .reverse()
+    .join("-"); // Converte para o formato YYYY-MM-DD
+
   const anoAtualSistema = today.split("-")[0];
   const [mesAtual, setMesAtual] = useState(today.split("-")[1]);
   const [anoAtual, setAnoAtual] = useState(today.split("-")[0]);
@@ -134,27 +142,31 @@ const Calendario = () => {
           const [ano, mes] = chave.split("-");
           const eventosMes = eventosPorMes.eventosAgrupados[chave];
 
-          return (
-            <View key={chave}>
-              <Text className="mt-8 text-3xl font-bold text-blue-700 text-start pl-2">
-                {mesesEmPortugues[mes]} {ano !== anoAtualSistema ? ano : ""}
-              </Text>
-              <View className="mt-4">
-                {eventosMes.length > 0 ? (
-                  <FlatList
-                    data={eventosMes}
-                    renderItem={renderItem}
-                    keyExtractor={(item) => item.date.toString()}
-                    scrollEnabled={false}
-                  />
-                ) : (
-                  <Text className="text-center text-gray-500 text-lg">
-                    Não há eventos neste mês
-                  </Text>
-                )}
+          // Exibe somente meses com eventos ou o mês atual, mesmo sem eventos
+          if (eventosMes.length > 0 || chave === `${anoAtual}-${mesAtual}`) {
+            return (
+              <View key={chave}>
+                <Text className="mt-8 text-3xl font-bold text-blue-700 text-start pl-2">
+                  {mesesEmPortugues[mes]} {ano !== anoAtualSistema ? ano : ""}
+                </Text>
+                <View className="mt-4">
+                  {eventosMes.length > 0 ? (
+                    <FlatList
+                      data={eventosMes}
+                      renderItem={renderItem}
+                      keyExtractor={(item) => item.date.toString()}
+                      scrollEnabled={false}
+                    />
+                  ) : (
+                    <Text className="text-center text-gray-500 text-lg">
+                      Não há eventos neste mês
+                    </Text>
+                  )}
+                </View>
               </View>
-            </View>
-          );
+            );
+          }
+          return null;
         })}
       </ScrollView>
     </View>
