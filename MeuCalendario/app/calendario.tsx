@@ -6,12 +6,10 @@ import { Calendar } from "react-native-calendars";
 
 const Calendario = () => {
   const eventos = [
-    { date: "2025-03-06", title: "Consulta Dentária" },
-    { date: "2025-04-20", title: "Consulta de Rotina" },
-    { date: "2025-03-15", title: "Aniversário de João" },
-    { date: "2025-04-10", title: "Reunião de Trabalho" },
-    { date: "2025-03-30", title: "Jantar com Amigos" },
-    { date: "2024-12-25", title: "Natal" },
+    { date: "2025-04-20", title: "Remoção Siso" },
+    { date: "2025-03-15", title: "Consulta com dentista" },
+    { date: "2025-04-10", title: "Troca de escova de dente" },
+    { date: "2025-07-30", title: "Troca de aparelho dental" },
   ];
 
   const today = new Date().toLocaleDateString("pt-BR", {
@@ -65,29 +63,35 @@ const Calendario = () => {
   // Agrupar eventos por mês e preencher meses sem eventos
   const eventosPorMes = useMemo(() => {
     const eventosAgrupados = {};
-
+  
     eventos.forEach((evento) => {
       const [ano, mes] = evento.date.split("-");
       const chave = `${ano}-${mes}`;
       if (!eventosAgrupados[chave]) eventosAgrupados[chave] = [];
       eventosAgrupados[chave].push(evento);
     });
-
+  
     const mesesOrdenados = gerarListaMesesFuturos();
     mesesOrdenados.forEach((mesAno) => {
       if (!eventosAgrupados[mesAno]) {
         eventosAgrupados[mesAno] = [];
       }
     });
-
+  
+    // Ordenar eventos dentro de cada mês por data crescente
+    Object.keys(eventosAgrupados).forEach((mesAno) => {
+      eventosAgrupados[mesAno].sort((a, b) => new Date(a.date) - new Date(b.date));
+    });
+  
     const chaveMesAtual = `${anoAtual}-${mesAtual}`;
     if (mesesOrdenados.includes(chaveMesAtual)) {
       mesesOrdenados.splice(mesesOrdenados.indexOf(chaveMesAtual), 1);
       mesesOrdenados.unshift(chaveMesAtual);
     }
-
+  
     return { eventosAgrupados, mesesOrdenados };
   }, [eventos, mesAtual, anoAtual]);
+  
 
   const getMarkedDates = () => {
     let markedDates = {};
@@ -143,7 +147,7 @@ const Calendario = () => {
   return (
     <View className="flex-col">
       <View className="flex-row justify-between items-center px-6 py-4">
-        <Text className="text-xl font-bold">CALENDÁRIO</Text>
+        <Text className="title">Calendário</Text>
         <Link href={"/add-evento"} asChild>
           <TouchableOpacity>
             <Plus size={24} color="blue" />
@@ -161,7 +165,8 @@ const Calendario = () => {
           hideExtraDays={true}
         />
       </View>
-      <ScrollView className="flex px-6 bg-white">
+      <ScrollView className="flex mt-6 px-6 bg-white">
+        
         {eventosPorMes.mesesOrdenados.map((chave) => {
           const [ano, mes] = chave.split("-");
           const eventosMes = eventosPorMes.eventosAgrupados[chave];
@@ -170,7 +175,7 @@ const Calendario = () => {
           if (eventosMes.length > 0 || chave === `${anoAtual}-${mesAtual}`) {
             return (
               <View key={chave}>
-                <Text className="mt-8 text-3xl font-bold text-blue-700 text-start pl-2">
+                <Text className={`${chave === `${anoAtual}-${mesAtual}` ? "text-4xl text-blue-700 text-start pl-2 font-bold" : "mt-9 text-2xl font-bold text-blue-500 text-start pl-2"}`}>
                   {mesesEmPortugues[mes]} {ano !== anoAtualSistema ? ano : ""}
                 </Text>
                 <View className="mt-4">

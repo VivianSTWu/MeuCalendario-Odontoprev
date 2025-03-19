@@ -11,7 +11,7 @@ const RootLayout = () => {
     const segments = useSegments();
 
     // Verifica se estamos nas páginas que não devem ter o ícone "<"
-    const isNoBackButton = segments[0] === 'index' || segments[0] === 'form-inicial' || segments[0] === 'calendario'; 
+    const isNoBackButton = segments[0] === 'index' || segments[0] === 'form-inicial'; 
 
     return (
         <SafeAreaView className='h-full bg-white'>

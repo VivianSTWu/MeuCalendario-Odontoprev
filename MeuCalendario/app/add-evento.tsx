@@ -12,7 +12,7 @@ const AddEvento = () => {
 
     const tipoEntrada = [
         { id: 13, text: "Consulta com dentista" },
-        { id: 14, text: "Troca de proptetor bucal" },
+        { id: 14, text: "Troca de protetor bucal" },
         { id: 15, text: "Troca de escova de dentes" },
     ];
 
@@ -37,14 +37,14 @@ const AddEvento = () => {
     };
     return (
         <ScrollView className="flex-1 pl-6 pr-10 bg-white">
-            <Text className="form-question">
+            <Text className="title">
                 Adicione uma nova entrada
             </Text>
             {tipoEntrada.map((q) => (
                 <TouchableOpacity
                     key={q.id}
                     onPress={() => setSelectedRadio(q.id)}
-                    className="flex-row items-center mb-1 py-1.5"
+                    className="flex-row items-center mb-1 mt-4 py-1.5"
                 >
                     <View
                         className={`w-6 h-6 border-2 rounded-full ${selectedRadio === q.id ? "bg-blue-500 border-blue-500" : "border-gray-500"
