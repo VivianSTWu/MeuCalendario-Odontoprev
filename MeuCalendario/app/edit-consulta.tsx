@@ -1,20 +1,12 @@
-import { View, Text, ScrollView, TouchableOpacity, Modal, Platform } from 'react-native'
 import React, { useState } from 'react'
-import { Calendar } from 'lucide-react-native'
+import { Modal, Platform, TouchableOpacity, View, Text, ScrollView } from 'react-native'
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { Link } from 'expo-router';
+import { Calendar } from "lucide-react-native"; // Ícone de calendário
 
-const AddEvento = () => {
+function EditConsulta() {
     const [date, setDate] = useState(new Date());
     const [tempDate, setTempDate] = useState(new Date());
     const [show, setShow] = useState(false);
-    const [selectedRadio, setSelectedRadio] = useState<number | null>(null);
-
-    const tipoEntrada = [
-        { id: 13, text: "Consulta com dentista" },
-        { id: 14, text: "Troca de proptetor bucal" },
-        { id: 15, text: "Troca de escova de dentes" },
-    ];
 
     const oneYearAgo = new Date();
     oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
@@ -35,25 +27,9 @@ const AddEvento = () => {
         setDate(tempDate);
         setShow(false);
     };
+
     return (
         <ScrollView className="flex-1 pl-6 pr-10 bg-white">
-            <Text className="form-question">
-                Adicione uma nova entrada
-            </Text>
-            {tipoEntrada.map((q) => (
-                <TouchableOpacity
-                    key={q.id}
-                    onPress={() => setSelectedRadio(q.id)}
-                    className="flex-row items-center mb-1 py-1.5"
-                >
-                    <View
-                        className={`w-6 h-6 border-2 rounded-full ${selectedRadio === q.id ? "bg-blue-500 border-blue-500" : "border-gray-500"
-                            }`}
-                    />
-                    <Text className="ml-2 text-lg">{q.text}</Text>
-                </TouchableOpacity>
-            ))}
-
             <TouchableOpacity
                 onPress={() => setShow(true)}
                 className="flex-row items-center justify-between p-2 border-b border-black mt-4"
@@ -97,13 +73,8 @@ const AddEvento = () => {
                     </View>
                 </Modal>
             )}
-            <Link href={"/calendario"} asChild>
-                <TouchableOpacity className="mt-6 p-4 bg-blue-600 rounded-lg items-center">
-                    <Text className='color-white text-xl'>Adicionar</Text>
-                </TouchableOpacity>
-            </Link>
         </ScrollView>
     )
 }
 
-export default AddEvento
+export default EditConsulta
