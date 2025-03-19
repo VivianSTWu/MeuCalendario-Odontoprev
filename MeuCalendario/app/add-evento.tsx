@@ -2,6 +2,7 @@ import { View, Text, ScrollView, TouchableOpacity, Modal, Platform } from 'react
 import React, { useState } from 'react'
 import { Calendar } from 'lucide-react-native'
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { Link } from 'expo-router';
 
 const AddEvento = () => {
     const [date, setDate] = useState(new Date());
@@ -96,6 +97,11 @@ const AddEvento = () => {
                     </View>
                 </Modal>
             )}
+            <Link href={"/calendario"} asChild>
+                <TouchableOpacity className="mt-6 p-4 bg-blue-600 rounded-lg items-center">
+                    <Text className='color-white text-xl'>Enviar</Text>
+                </TouchableOpacity>
+            </Link>
         </ScrollView>
     )
 }

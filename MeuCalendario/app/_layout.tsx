@@ -15,7 +15,7 @@ const RootLayout = () => {
 
     return (
         <SafeAreaView className='h-full bg-white'>
-            <View className='h-28 pb-3 mb-8 flex bg-blue-700 justify-end items-center relative'>
+            <View className='h-28 pb-3 mb-5 flex bg-blue-700 justify-end items-center relative'>
                 {/* Mostrar ícone "<" apenas se não estiver nas páginas especificadas */}
                 {!isNoBackButton && (
                     <TouchableOpacity className="absolute left-4 bottom-3" onPress={() => router.back()}>
