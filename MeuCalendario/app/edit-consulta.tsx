@@ -42,7 +42,7 @@ function EditConsulta() {
         <ScrollView className="flex-1 pl-6 pr-10 bg-white">
             <Text className="title">Consulta com dentista</Text>
 
-            {/* Seleção de Data */}
+            {/* Campo Data */}
             <Text className='font-semibold text-xl ml-2 mt-2'>Data</Text>
             <TouchableOpacity onPress={() => setShowDatePicker(true)} className="flex-row items-center p-2">
                 <View className="flex-row items-center bg-slate-100 w-full p-4">
@@ -51,7 +51,7 @@ function EditConsulta() {
                 </View>
             </TouchableOpacity>
 
-            {/* Seleção de Horário */}
+            {/* Campo Horário */}
             <Text className='font-semibold text-xl ml-2 mt-2'>Horário</Text>
             <TouchableOpacity onPress={() => setShowTimePicker(true)} className="flex-row items-center p-2">
                 <View className="flex-row items-center bg-slate-100 w-full p-4">
@@ -61,7 +61,7 @@ function EditConsulta() {
                 </View>
             </TouchableOpacity>
 
-            {/* Campo Editável - Profissional */}
+            {/* Campo Profissional */}
             <Text className='font-semibold text-xl ml-2 mt-2'>Profissional</Text>
             <TouchableOpacity className="flex-row items-center p-2">
                 <View className="bg-slate-100 w-full p-4">
@@ -73,7 +73,7 @@ function EditConsulta() {
                 </View>
             </TouchableOpacity>
 
-            {/* Campo Editável - Local */}
+            {/* Campo Local */}
             <Text className='font-semibold text-xl ml-2 mt-2'>Local</Text>
             <TouchableOpacity className="flex-row items-center p-2">
                 <View className=" flex bg-slate-100 w-full p-4  justify-center">
@@ -87,7 +87,7 @@ function EditConsulta() {
                 </View>
             </TouchableOpacity>
 
-            {/* DateTimePicker para Android */}
+            {/* DateTimePicker Android */}
             {showDatePicker && Platform.OS === "android" && (
                 <DateTimePicker value={date} mode="date" display="default" onChange={(event, selectedDate) => {
                     if (selectedDate) {
@@ -106,7 +106,7 @@ function EditConsulta() {
                 }} />
             )}
 
-            {/* Modal para DatePicker no iOS */}
+            {/* DatePicker iOS */}
             {showDatePicker && Platform.OS === "ios" && (
                 <Modal transparent={true} animationType="fade">
                     <View className="flex-1 justify-center items-center bg-black/50">
@@ -120,7 +120,7 @@ function EditConsulta() {
                 </Modal>
             )}
 
-            {/* Modal para TimePicker no iOS */}
+            {/* TimePicker iOS */}
             {showTimePicker && Platform.OS === "ios" && (
                 <Modal transparent={true} animationType="fade">
                     <View className="flex-1 justify-center items-center bg-black/50">
@@ -134,7 +134,7 @@ function EditConsulta() {
                 </Modal>
             )}
 
-            {/* Botões */}
+
             <View className='flex flex-row gap-3 justify-between'>
                 <Link href={"/calendario"} asChild>
                     <TouchableOpacity className="mt-6 p-4 bg-red-600 rounded-lg items-center w-1/2">
