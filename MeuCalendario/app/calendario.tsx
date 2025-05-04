@@ -1,7 +1,7 @@
 import { Link } from "expo-router";
-import { Plus, FilePenLine, PenIcon } from "lucide-react-native";
+import { Plus } from "lucide-react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import React, { useState, useMemo, } from "react";
+import React, { useState, useMemo } from "react";
 import { Text, View, ScrollView, FlatList, TouchableOpacity } from "react-native";
 import { Calendar } from "react-native-calendars";
 
@@ -95,7 +95,6 @@ const Calendario = () => {
     return { eventosAgrupados, mesesOrdenados };
   }, [eventos, mesAtual, anoAtual]);
 
-
   const getMarkedDates = () => {
     let markedDates = {};
 
@@ -121,34 +120,29 @@ const Calendario = () => {
   };
 
   const renderItem = ({ item }) => {
-    // Verificando o que está sendo coletado
-    console.log("Item do evento:", item);
-
     return (
-      <View className="flex flex-row py-2">
-        <View className="basis-1/4 p-2 flex justify-center items-center">
-          <Text className="text-blue-900 font-bold text-4xl">
-            {parseInt(item.date.split("-")[2], 10)}
-          </Text>
-        </View>
-        <View className="basis-3/4 pl-5 flex justify-center">
-          <Text className="text-black text-lg">{item.title}</Text>
-        </View>
-      </View>
+      <Link href={`/edit-consulta`} asChild>
+        <TouchableOpacity>
+          <View className="flex flex-row py-2">
+            <View className="basis-1/4 p-2 flex justify-center items-center">
+              <Text className="text-blue-900 font-bold text-4xl">
+                {parseInt(item.date.split("-")[2], 10)}
+              </Text>
+            </View>
+            <View className="basis-3/4 pl-5 flex justify-center">
+              <Text className="text-black text-lg">{item.title}</Text>
+            </View>
+            <View className="basis-1/5 flex justify-center items-center">
+              <Icon name="pencil" size={24} color="blue" />
+            </View>
+          </View>
+        </TouchableOpacity>
+      </Link>
     );
   };
 
-  const formatDate = (date) => {
-    const d = new Date(date);
-    const year = d.getFullYear();
-    const month = (d.getMonth() + 1).toString().padStart(2, "0");
-    const day = d.getDate().toString().padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  };
-
-
   return (
-    <View className="flex-col">
+    <View className="flex-col flex-1">
       <View className="flex-row justify-between items-center px-6 py-4">
         <Text className="title">Calendário</Text>
         <Link href={"/add-evento"} asChild>
@@ -168,59 +162,44 @@ const Calendario = () => {
           hideExtraDays={true}
         />
       </View>
-      <View>
-        <ScrollView className="flex mt-6 px-6 bg-white">
+      <ScrollView className="flex mt-6 px-6 bg-white flex-1">
+        {eventosPorMes.mesesOrdenados.map((chave) => {
+          const [ano, mes] = chave.split("-");
+          const eventosMes = eventosPorMes.eventosAgrupados[chave];
 
-          {eventosPorMes.mesesOrdenados.map((chave) => {
-            const [ano, mes] = chave.split("-");
-            const eventosMes = eventosPorMes.eventosAgrupados[chave];
-
-            // Exibe somente meses com eventos ou o mês atual, mesmo sem eventos
-            if (eventosMes.length > 0 || chave === `${anoAtual}-${mesAtual}`) {
-              return (
-                <View key={chave}>
-                  <Text className={`${chave === `${anoAtual}-${mesAtual}` ? "text-4xl text-blue-700 text-start pl-2 font-bold" : "mt-9 text-2xl font-bold text-blue-500 text-start pl-2"}`}>
-                    {mesesEmPortugues[mes]} {ano !== anoAtualSistema ? ano : ""}
-                  </Text>
-                  <View className="mt-4">
-                    {eventosMes.length > 0 ? (
-                      <FlatList
-                        data={eventosMes}
-                        renderItem={({ item }) => (
-                          <Link href={`/edit-consulta`} asChild>
-                            <TouchableOpacity>
-                              <View className="flex flex-row py-2">
-                                <View className="basis-1/4 p-2 flex justify-center items-center">
-                                  <Text className="text-blue-900 font-bold text-4xl">
-                                    {parseInt(item.date.split("-")[2], 10)}
-                                  </Text>
-                                </View>
-                                <View className="basis-3/4 pl-5 flex justify-center">
-                                  <Text className="text-black text-lg">{item.title}</Text>
-                                </View>
-                                <View className="basis-1/5 flex justify-center items-center">
-                                <Icon name="pencil" size={24} color="blue" />
-                                </View>
-                              </View>
-                            </TouchableOpacity>
-                          </Link>
-                        )}
-                        keyExtractor={(item) => item.date.toString()}
-                        scrollEnabled={false}
-                      />
-                    ) : (
-                      <Text className="text-center text-gray-500 text-lg">
-                        Não há eventos neste mês
-                      </Text>
-                    )}
-                  </View>
+          // Exibe somente meses com eventos ou o mês atual, mesmo sem eventos
+          if (eventosMes.length > 0 || chave === `${anoAtual}-${mesAtual}`) {
+            return (
+              <View key={chave}>
+                <Text
+                  className={`${
+                    chave === `${anoAtual}-${mesAtual}`
+                      ? "text-4xl text-blue-700 text-start pl-2 font-bold"
+                      : "mt-9 text-2xl font-bold text-blue-500 text-start pl-2"
+                  }`}
+                >
+                  {mesesEmPortugues[mes]} {ano !== anoAtualSistema ? ano : ""}
+                </Text>
+                <View className="mt-4">
+                  {eventosMes.length > 0 ? (
+                    <FlatList
+                      data={eventosMes}
+                      renderItem={renderItem}
+                      keyExtractor={(item) => item.date.toString()}
+                      scrollEnabled={false}
+                    />
+                  ) : (
+                    <Text className="text-center text-gray-500 text-lg">
+                      Não há eventos neste mês
+                    </Text>
+                  )}
                 </View>
-              );
-            }
-            return null;
-          })}
-        </ScrollView>
-      </View>
+              </View>
+            );
+          }
+          return null;
+        })}
+      </ScrollView>
     </View>
   );
 };
