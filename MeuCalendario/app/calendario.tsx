@@ -1,4 +1,4 @@
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { Plus } from "lucide-react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import React, { useState, useMemo } from "react";
@@ -6,6 +6,8 @@ import { Text, View, FlatList, TouchableOpacity, ScrollView } from "react-native
 import { Calendar } from "react-native-calendars";
 
 const Calendario = () => {
+  const router = useRouter();
+
   const eventos = [
     { date: "2025-06-20", title: "Consulta com dentista" },
     { date: "2025-05-15", title: "Consulta com dentista" },
@@ -44,6 +46,13 @@ const Calendario = () => {
     const mes = month.month.toString().padStart(2, "0");
     setMesAtual(mes);
     setAnoAtual(month.year.toString());
+  };
+
+  const handleDayPress = (day) => {
+    router.push({
+      pathname: "/add-evento",
+      params: { dataSelecionada: day.dateString },
+    });
   };
 
   const gerarListaMesesFuturos = () => {
@@ -116,6 +125,7 @@ const Calendario = () => {
           current={today}
           markingType={"custom"}
           markedDates={getMarkedDates()}
+          onDayPress={handleDayPress}
           onMonthChange={handleMonthChange}
           monthFormat={"MMMM yyyy"}
           firstDay={0}
