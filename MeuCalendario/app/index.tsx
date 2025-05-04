@@ -1,22 +1,28 @@
-import { View, Text, TouchableOpacity } from 'react-native'
-import React from 'react'
-import { Link } from 'expo-router';
+// app/index.tsx
+import { useEffect, useState } from 'react';
+import { useRouter } from 'expo-router';
+import { View, ActivityIndicator } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
+export default function Index() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
 
-const Index = () => {
-    return (
-        <View className='flex container px-6 justify-end items-center'>
-            <View>
-                <Text className='pb-6 text-xl text-center mt-5'>Para usar esta ferramenta, precisamos que você nos informe algumas coisinhas, tudo bem?</Text>
-                <Text className='pb-6 text-xl text-center'>Você só vai precisar preencher isto uma vez.</Text>
-            </View>
-            <Link href={"/form-inicial"} asChild>
-                <TouchableOpacity className='flex bg-blue-700 py-4 px-4 rounded-md w-auto justify-end items-center mt-8' onPress={() => { }}>
-                    <Text className='color-white text-xl'>Vamos lá!</Text>
-                </TouchableOpacity>
-            </Link>
-        </View>
-    );
-};
+  useEffect(() => {
+    const verificarLogin = async () => {
+      const usuario = await AsyncStorage.getItem('usuario');
+      if (usuario) {
+        router.replace('/appOdonto');
+      } else {
+        router.replace('/login');
+      }
+    };
+    verificarLogin();
+  }, []);
 
-export default Index;
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <ActivityIndicator size="large" color="#007AFF" />
+    </View>
+  );
+}
