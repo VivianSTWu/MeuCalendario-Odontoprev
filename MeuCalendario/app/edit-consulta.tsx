@@ -9,8 +9,7 @@ function EditConsulta() {
     const [tempDate, setTempDate] = useState(new Date());
     const [showDatePicker, setShowDatePicker] = useState(false);
 
-    const [time, setTime] = useState(null);
-    const [tempTime, setTempTime] = useState(new Date());
+    const [time, setTime] = useState(new Date());
     const [showTimePicker, setShowTimePicker] = useState(false);
 
     const [profissional, setProfissional] = useState();
@@ -22,20 +21,9 @@ function EditConsulta() {
         }
     };
 
-    const onTimeChange = (event, selectedTime) => {
-        if (selectedTime) {
-            setTempTime(selectedTime);
-        }
-    };
-
     const confirmDate = () => {
         setDate(tempDate);
         setShowDatePicker(false);
-    };
-
-    const confirmTime = () => {
-        setTime(tempTime);
-        setShowTimePicker(false);
     };
 
     return (
@@ -56,7 +44,7 @@ function EditConsulta() {
             <TouchableOpacity onPress={() => setShowTimePicker(true)} className="flex-row items-center p-2">
                 <View className="flex-row items-center bg-slate-100 w-full p-4">
                     <Text className="ml-2 text-lg">
-                        {time ? time.toLocaleTimeString("pt-BR", { hour: '2-digit', minute: '2-digit' }) : "12:00"}
+                        {time.toLocaleTimeString("pt-BR", { hour: '2-digit', minute: '2-digit' })}
                     </Text>
                 </View>
             </TouchableOpacity>
@@ -69,6 +57,7 @@ function EditConsulta() {
                         value={profissional}
                         className="ml-2 text-lg"
                         placeholder="Digite o nome do profissional"
+                        onChangeText={setProfissional}
                     />
                 </View>
             </TouchableOpacity>
@@ -82,28 +71,37 @@ function EditConsulta() {
                         onChangeText={setLocal}
                         className="ml-2 text-lg align-center"
                         placeholder="Digite o local da consulta"
-
                     />
                 </View>
             </TouchableOpacity>
 
             {/* DateTimePicker Android */}
             {showDatePicker && Platform.OS === "android" && (
-                <DateTimePicker value={date} mode="date" display="default" onChange={(event, selectedDate) => {
-                    if (selectedDate) {
-                        setDate(selectedDate);
-                    }
-                    setShowDatePicker(false);
-                }} />
+                <DateTimePicker
+                    value={date}
+                    mode="date"
+                    display="default"
+                    onChange={(event, selectedDate) => {
+                        if (selectedDate) {
+                            setDate(selectedDate);
+                        }
+                        setShowDatePicker(false);
+                    }}
+                />
             )}
 
             {showTimePicker && Platform.OS === "android" && (
-                <DateTimePicker value={time} mode="time" display="default" onChange={(event, selectedTime) => {
-                    if (selectedTime) {
-                        setTime(selectedTime);
-                    }
-                    setShowTimePicker(false);
-                }} />
+                <DateTimePicker
+                    value={time}
+                    mode="time"
+                    display="default"
+                    onChange={(event, selectedTime) => {
+                        if (selectedTime) {
+                            setTime(selectedTime);
+                        }
+                        setShowTimePicker(false);
+                    }}
+                />
             )}
 
             {/* DatePicker iOS */}
@@ -111,7 +109,12 @@ function EditConsulta() {
                 <Modal transparent={true} animationType="fade">
                     <View className="flex-1 justify-center items-center bg-black/50">
                         <View className="bg-white p-4 rounded-lg">
-                            <DateTimePicker value={tempDate} mode="date" display="spinner" onChange={onDateChange} />
+                            <DateTimePicker
+                                value={tempDate}
+                                mode="date"
+                                display="spinner"
+                                onChange={onDateChange}
+                            />
                             <TouchableOpacity onPress={confirmDate} className="mt-4 p-4 bg-blue-500 rounded-lg">
                                 <Text className="text-white text-center text-lg">OK</Text>
                             </TouchableOpacity>
@@ -125,15 +128,23 @@ function EditConsulta() {
                 <Modal transparent={true} animationType="fade">
                     <View className="flex-1 justify-center items-center bg-black/50">
                         <View className="bg-white p-4 rounded-lg">
-                            <DateTimePicker value={tempTime} mode="time" display="spinner" onChange={onTimeChange} />
-                            <TouchableOpacity onPress={confirmTime} className="mt-4 p-2 bg-blue-500 rounded-lg">
+                            <DateTimePicker
+                                value={time}
+                                mode="time"
+                                display="spinner"
+                                onChange={(event, selectedTime) => {
+                                    if (selectedTime) {
+                                        setTime(selectedTime);
+                                    }
+                                }}
+                            />
+                            <TouchableOpacity onPress={() => setShowTimePicker(false)} className="mt-4 p-2 bg-blue-500 rounded-lg">
                                 <Text className="text-white text-center text-lg">OK</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
                 </Modal>
             )}
-
 
             <View className='flex flex-row gap-3 justify-between'>
                 <Link href={"/calendario"} asChild>
