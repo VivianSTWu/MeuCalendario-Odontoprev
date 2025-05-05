@@ -28,11 +28,7 @@ const Calendario = () => {
 
   const eventos = [
     { date: "2025-06-20", title: "Consulta com dentista" },
-    { date: "2025-05-15", title: "Consulta com dentista" },
-    { date: "2025-06-10", title: "Troca de escova de dente" },
-    { date: "2025-06-12", title: "Troca de protetor bucal" },
-    { date: "2025-05-20", title: "Troca de escova de dente" },
-    { date: "2025-07-30", title: "Troca de aparelho dental" },
+
   ];
 
   const today = new Date().toLocaleDateString("pt-BR", {
@@ -152,23 +148,21 @@ const Calendario = () => {
       </View>
 
       <ScrollView className="flex mt-6 px-6 bg-white flex-1">
-        {eventosPorMes.mesesOrdenados.map((chave) => {
-          const [ano, mes] = chave.split("-");
-          const eventosMes = eventosPorMes.eventosAgrupados[chave];
+        {(() => {
+          const chaveMesAtual = `${anoAtual}-${mesAtual}`;
+          const eventosMesAtual = eventosPorMes.eventosAgrupados[chaveMesAtual];
+          const outrosMeses = eventosPorMes.mesesOrdenados.filter(chave => chave !== chaveMesAtual && eventosPorMes.eventosAgrupados[chave].length > 0);
 
-          if (eventosMes.length > 0 || chave === `${anoAtual}-${mesAtual}`) {
-            return (
-              <View key={chave}>
-                <Text
-                  className={`${chave === `${anoAtual}-${mesAtual}`
-                    ? "text-4xl text-blue-700 text-start pl-2 font-bold"
-                    : "mt-9 text-2xl font-bold text-blue-500 text-start pl-2"}`}
-                >
-                  {mesesEmPortugues[mes]} {ano !== anoAtualSistema ? ano : ""}
+          return (
+            <>
+              {/* Mês atual */}
+              <View key={chaveMesAtual}>
+                <Text className="text-4xl text-blue-700 text-start pl-2 font-bold">
+                  {mesesEmPortugues[mesAtual]} {anoAtual !== anoAtualSistema ? anoAtual : ""}
                 </Text>
                 <View className="mt-4">
-                  {eventosMes.length > 0 ? (
-                    eventosMes.map((item) => (
+                  {eventosMesAtual.length > 0 ? (
+                    eventosMesAtual.map((item) => (
                       <Link key={item.date} href={`/edit-troca`} asChild>
                         <TouchableOpacity>
                           <View className="flex flex-row py-2 items-center border-b border-gray-200">
@@ -188,16 +182,55 @@ const Calendario = () => {
                       </Link>
                     ))
                   ) : (
-                    <Text className="text-center text-gray-500 text-lg">
-                      Não há eventos neste mês
-                    </Text>
+                    <Text className="text-center text-gray-500 text-lg">Não há eventos neste mês</Text>
                   )}
                 </View>
               </View>
-            );
-          }
-          return null;
-        })}
+
+              {/* Texto de separação condicional */}
+              {outrosMeses.length > 0 && (
+                <Text className="text-left text-gray-500 text-sm mt-10">
+                  Próximos eventos
+                </Text>
+              )}
+
+              {/* Demais meses */}
+              {outrosMeses.map((chave) => {
+                const [ano, mes] = chave.split("-");
+                const eventosMes = eventosPorMes.eventosAgrupados[chave];
+
+                return (
+                  <View key={chave}>
+                    <Text className="mt-3 text-2xl font-bold text-blue-500 text-start pl-2">
+                      {mesesEmPortugues[mes]} {ano !== anoAtualSistema ? ano : ""}
+                    </Text>
+                    <View className="mt-4">
+                      {eventosMes.map((item) => (
+                        <Link key={item.date} href={`/edit-troca`} asChild>
+                          <TouchableOpacity>
+                            <View className="flex flex-row py-2 items-center border-b border-gray-200">
+                              <View className="w-16 items-center">
+                                <Text className="text-blue-700 font-bold text-2xl">
+                                  {parseInt(item.date.split("-")[2], 10)}
+                                </Text>
+                              </View>
+                              <View className="flex-1">
+                                <Text className="text-base text-black">{item.title}</Text>
+                              </View>
+                              <View className="px-3">
+                                <Icon name="pencil" size={20} color="#007AFF" />
+                              </View>
+                            </View>
+                          </TouchableOpacity>
+                        </Link>
+                      ))}
+                    </View>
+                  </View>
+                );
+              })}
+            </>
+          );
+        })()}
       </ScrollView>
     </View>
   );
