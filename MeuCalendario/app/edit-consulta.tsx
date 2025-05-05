@@ -87,6 +87,7 @@ function EditConsulta() {
                         }
                         setShowDatePicker(false);
                     }}
+                    locale="pt-BR"
                 />
             )}
 
@@ -101,6 +102,7 @@ function EditConsulta() {
                         }
                         setShowTimePicker(false);
                     }}
+                    locale="pt-BR"
                 />
             )}
 
@@ -114,6 +116,7 @@ function EditConsulta() {
                                 mode="date"
                                 display="spinner"
                                 onChange={onDateChange}
+                                locale="pt-BR"
                             />
                             <TouchableOpacity onPress={confirmDate} className="mt-4 p-4 bg-blue-500 rounded-lg">
                                 <Text className="text-white text-center text-lg">OK</Text>
@@ -137,6 +140,7 @@ function EditConsulta() {
                                         setTime(selectedTime);
                                     }
                                 }}
+                                locale="pt-BR"
                             />
                             <TouchableOpacity onPress={() => setShowTimePicker(false)} className="mt-4 p-2 bg-blue-500 rounded-lg">
                                 <Text className="text-white text-center text-lg">OK</Text>

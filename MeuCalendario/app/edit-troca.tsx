@@ -39,6 +39,7 @@ function EditTroca() {
         </View>
       </TouchableOpacity>
 
+
       {/* DateTimePickers Android */}
       {showDatePicker && Platform.OS === "android" && (
         <DateTimePicker
@@ -51,6 +52,7 @@ function EditTroca() {
             }
             setShowDatePicker(false);
           }}
+          locale="pt-BR"
         />
       )}
 
@@ -65,6 +67,7 @@ function EditTroca() {
             }
             setShowTimePicker(false);
           }}
+          locale="pt-BR"
         />
       )}
 
@@ -78,6 +81,7 @@ function EditTroca() {
                 mode="date"
                 display="spinner"
                 onChange={onDateChange}
+                locale="pt-BR"
               />
               <TouchableOpacity onPress={confirmDate} className="mt-4 p-4 bg-blue-500 rounded-lg">
                 <Text className="text-white text-center text-lg">OK</Text>
@@ -87,6 +91,7 @@ function EditTroca() {
         </Modal>
       )}
 
+ 
 
       {/* Ações */}
       <View className='flex flex-row gap-3 justify-between'>
