@@ -151,7 +151,7 @@ const Calendario = () => {
                 <View className="mt-4">
                   {eventosMes.length > 0 ? (
                     eventosMes.map((item) => (
-                      <Link key={item.date} href={`/edit-consulta`} asChild>
+                      <Link key={item.date} href={`/edit-troca`} asChild>
                         <TouchableOpacity>
                           <View className="flex flex-row py-2 items-center border-b border-gray-200">
                             <View className="w-16 items-center">
