@@ -13,7 +13,7 @@ const AppOdonto = () => {
 
   const verificarFormulario = async () => {
     // Aqui você simularia a requisição para saber se o formulário já foi preenchido
-    const resposta = true; // simulado: `true` ou `false` da API
+    const resposta = false; // simulado: `true` ou `false` da API
     if (resposta) {
       router.push('/calendario');
     } else {
@@ -46,15 +46,14 @@ export default AppOdonto;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: '#fff',
     padding: 20,
   },
   logo: {
     width: 200,
-    height: 80,
-    marginBottom: 32,
+    height: 150,
   },
   title: {
     fontSize: 22,
@@ -64,12 +63,13 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: '#007AFF',
-    paddingVertical: 14,
-    paddingHorizontal: 24,
+    paddingVertical: 60,
+    paddingHorizontal: 10,
     borderRadius: 8,
     marginTop: 20,
     marginBottom: 20,
-    width: '80%',
+    width: '50%',
+    height: '20%',
   },
   buttonText: {
     color: '#fff',

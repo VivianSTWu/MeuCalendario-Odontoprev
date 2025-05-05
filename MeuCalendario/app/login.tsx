@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ActivityIndicator, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -22,7 +22,7 @@ const Login = () => {
   }, []);
 
   const handleLogin = async () => {
-    if (email === 'teste@odon.com' && senha === '123456') {
+    if (email === 'teste@odon.com' && senha === '12345678') {
       await AsyncStorage.setItem('usuario', JSON.stringify({ email }));
       router.replace('/appOdonto');
     } else {
@@ -40,6 +40,11 @@ const Login = () => {
 
   return (
     <View style={styles.container}>
+      <Image
+              source={require('../assets/logo.png')}
+              style={styles.logo}
+              resizeMode="contain"
+            />
       <Text style={styles.title}>Login</Text>
       <TextInput
         placeholder="E-mail"
@@ -66,9 +71,16 @@ const Login = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     padding: 20,
     backgroundColor: '#fff',
+    
+  },
+  logo: {
+    width: 200,
+    height: 100,
+    marginBottom: 32,
+    alignSelf: 'center',
   },
   loadingContainer: {
     flex: 1,

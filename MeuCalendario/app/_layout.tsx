@@ -17,7 +17,7 @@ const RootLayout = () => {
     return (
         <SafeAreaView className='h-full bg-white'>
             {!isHiddenHeader && (
-                <View className='h-28 pb-3 mb-5 flex bg-blue-700 justify-end items-center relative'>
+                <View className='h-20 pb-3 mb-5 flex bg-blue-700 justify-end items-center relative'>
                     <TouchableOpacity
                         className="absolute left-4 bottom-3"
                         onPress={() => {
