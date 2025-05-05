@@ -82,7 +82,9 @@ const AddEvento = () => {
           mode="date"
           display="default"
           onChange={onChange}
-          maximumDate={new Date()}
+          maximumDate={twoYearsLater}
+          minimumDate={oneYearAgo}
+          locale="pt-BR"
         />
       )}
 
@@ -91,12 +93,13 @@ const AddEvento = () => {
           <View className="flex-1 justify-center items-center bg-black/50">
             <View className="bg-white p-4 rounded-lg">
               <DateTimePicker
-                value={Platform.OS === "ios" ? tempDate : date}
+                value={tempDate}
                 mode="date"
                 display="spinner"
                 onChange={onChange}
                 minimumDate={oneYearAgo}
                 maximumDate={twoYearsLater}
+                locale="pt-BR"
               />
               <TouchableOpacity
                 onPress={confirmDate}
