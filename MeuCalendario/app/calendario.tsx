@@ -217,7 +217,7 @@ const Calendario = () => {
                     <Text className="mt-3 text-2xl font-bold text-blue-500 text-start pl-2">
                       {mesesEmPortugues[mes]} {ano !== anoAtualSistema ? ano : ""}
                     </Text>
-                    <View className="mt-4">
+                    <View className="mt-1 mb-4">
                       {eventosMes.map((item) => (
                         <Link key={item.date} href={`/edit-troca`} asChild>
                           <TouchableOpacity>
