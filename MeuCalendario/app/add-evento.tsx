@@ -57,11 +57,11 @@ const AddEvento = () => {
           onPress={() => setSelectedRadio(q.id)}
           className="flex-row items-center mb-1 mt-4 py-1.5"
         >
-          <View
-            className={`w-6 h-6 border-2 rounded-full ${
-              selectedRadio === q.id ? "bg-blue-500 border-blue-500" : "border-gray-500"
-            }`}
-          />
+          <View className="w-6 h-6 border-2 rounded-full border-stone-600 items-center justify-center">
+            {selectedRadio === q.id && (
+              <View className="w-3 h-3 rounded-full bg-blue-500" />
+            )}
+          </View>
           <Text className="ml-2 text-lg">{q.text}</Text>
         </TouchableOpacity>
       ))}
@@ -114,7 +114,7 @@ const AddEvento = () => {
 
       <Link href="/calendario" asChild>
         <TouchableOpacity className="mt-6 p-4 bg-blue-600 rounded-lg items-center">
-          <Text className="color-white text-xl">Adicionar</Text>
+          <Text className="text-white text-xl">Adicionar</Text>
         </TouchableOpacity>
       </Link>
     </ScrollView>

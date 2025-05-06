@@ -28,7 +28,11 @@ const Calendario = () => {
 
   const eventos = [
     { date: "2025-06-20", title: "Consulta com dentista" },
-
+    { date: "2025-05-15", title: "Consulta com dentista" },
+    { date: "2025-06-10", title: "Troca de escova de dente" },
+    { date: "2025-06-12", title: "Troca de protetor bucal" },
+    { date: "2025-05-20", title: "Troca de escova de dente" },
+    { date: "2025-07-30", title: "Troca de aparelho dental" },
   ];
 
   const today = new Date().toLocaleDateString("pt-BR", {
@@ -163,7 +167,7 @@ const Calendario = () => {
                 <View className="mt-4">
                   {eventosMesAtual.length > 0 ? (
                     eventosMesAtual.map((item) => (
-                      <Link key={item.date} href={`/edit-troca`} asChild>
+                      <Link key={item.date} href={`/edit-consulta`} asChild>
                         <TouchableOpacity>
                           <View className="flex flex-row py-2 items-center border-b border-gray-200">
                             <View className="w-16 items-center">
