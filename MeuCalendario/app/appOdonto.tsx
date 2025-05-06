@@ -13,7 +13,7 @@ const AppOdonto = () => {
 
   const verificarFormulario = async () => {
     // Aqui você simularia a requisição para saber se o formulário já foi preenchido
-    const resposta = true; // simulado: `true` ou `false` da API
+    const resposta = false; // simulado: `true` ou `false` da API
     if (resposta) {
       router.push('/calendario');
     } else {

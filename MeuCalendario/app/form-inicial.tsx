@@ -1,8 +1,16 @@
 import { useState } from "react";
-import { View, Text, TouchableOpacity, Platform, Modal, ScrollView } from "react-native";
-import { Calendar } from "lucide-react-native"; // Ícone de calendário
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Platform,
+  Modal,
+  ScrollView,
+  Alert,
+} from "react-native";
+import { Calendar } from "lucide-react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 
 const doencas = [
   { id: 1, text: "Diabetes" },
@@ -26,9 +34,10 @@ const escovaOptions = [
 ];
 
 const FormInicial = () => {
+  const router = useRouter();
   const [selected, setSelected] = useState<number[]>([]);
   const [selectedRadio, setSelectedRadio] = useState<number | null>(null);
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState<Date | null>(null);
   const [tempDate, setTempDate] = useState(new Date());
   const [show, setShow] = useState(false);
 
@@ -52,6 +61,18 @@ const FormInicial = () => {
     setShow(false);
   };
 
+  const handleSubmit = () => {
+    if (!date) {
+      Alert.alert("Campo obrigatório", "Por favor, selecione a data da última visita ao dentista.");
+      return;
+    }
+    if (selectedRadio === null) {
+      Alert.alert("Campo obrigatório", "Por favor, selecione uma opção sobre a escova de dentes.");
+      return;
+    }
+    router.push("/calendario");
+  };
+
   return (
     <ScrollView className="flex-1 pl-6 pr-10 bg-white">
       <Text className="form-question">
@@ -65,13 +86,13 @@ const FormInicial = () => {
       >
         <View className="flex-row items-center">
           <Calendar size={24} color="black" />
-          <Text className="ml-2 text-lg">{date.toLocaleDateString("pt-BR")}</Text>
+          <Text className="ml-2 text-lg">{date ? date.toLocaleDateString("pt-BR") : "Selecione a data"}</Text>
         </View>
       </TouchableOpacity>
 
       {show && Platform.OS === "android" && (
         <DateTimePicker
-          value={date}
+          value={date || new Date()}
           mode="date"
           display="default"
           onChange={onChange}
@@ -102,7 +123,7 @@ const FormInicial = () => {
       )}
 
       <Text className="form-question mt-10">
-        Você possui alguma dessas doenças? Selecione todas que se aplicam. *
+        Você possui alguma dessas doenças? Selecione todas que se aplicam.
       </Text>
       {doencas.map((q) => (
         <TouchableOpacity
@@ -111,8 +132,7 @@ const FormInicial = () => {
           className="flex-row items-start mb-1 py-1.5"
         >
           <View
-            className={`w-6 h-6 border-2 rounded-md ${selected.includes(q.id) ? "bg-blue-500 border-blue-500" : "border-gray-500"
-              }`}
+            className={`w-6 h-6 border-2 rounded-md ${selected.includes(q.id) ? "bg-blue-500 border-blue-500" : "border-gray-500"}`}
           />
           <Text className="ml-2 text-lg">{q.text}</Text>
         </TouchableOpacity>
@@ -128,14 +148,13 @@ const FormInicial = () => {
           className="flex-row items-start mb-1 py-1.5"
         >
           <View
-            className={`w-6 h-6 border-2 rounded-md ${selected.includes(q.id) ? "bg-blue-500 border-blue-500" : "border-gray-500"
-              }`}
+            className={`w-6 h-6 border-2 rounded-md ${selected.includes(q.id) ? "bg-blue-500 border-blue-500" : "border-gray-500"}`}
           />
           <Text className="ml-2 text-lg">{q.text}</Text>
         </TouchableOpacity>
       ))}
 
-      <Text className="form-question mt-10">Última pergunta: quando você começou a utilizar a escova de dentes que está usando atualmente?</Text>
+      <Text className="form-question mt-10">Última pergunta: quando você começou a utilizar a escova de dentes que está usando atualmente? *</Text>
       {escovaOptions.map((q) => (
         <TouchableOpacity
           key={q.id}
@@ -143,17 +162,15 @@ const FormInicial = () => {
           className="flex-row items-center mb-1 py-1.5"
         >
           <View
-            className={`w-6 h-6 border-2 rounded-full ${selectedRadio === q.id ? "bg-blue-500 border-blue-500" : "border-gray-500"
-              }`}
+            className={`w-6 h-6 border-2 rounded-full ${selectedRadio === q.id ? "bg-blue-500 border-blue-500" : "border-gray-500"}`}
           />
           <Text className="ml-2 text-lg">{q.text}</Text>
         </TouchableOpacity>
       ))}
-      <Link href={"/calendario"} asChild>
-        <TouchableOpacity className="mt-6 p-4 bg-blue-600 rounded-lg items-center">
-          <Text className='color-white text-xl'>Enviar</Text>
-        </TouchableOpacity>
-      </Link>
+
+      <TouchableOpacity onPress={handleSubmit} className="mt-6 p-4 bg-blue-600 rounded-lg items-center">
+        <Text className='color-white text-xl'>Enviar</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 };
