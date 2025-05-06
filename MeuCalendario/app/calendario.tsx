@@ -93,18 +93,27 @@ const Calendario = () => {
       if (!eventosAgrupados[chave]) eventosAgrupados[chave] = [];
       eventosAgrupados[chave].push(evento);
     });
+
     const mesesOrdenados = gerarListaMesesFuturos();
+    const chaveMesAtual = `${anoAtual}-${mesAtual}`;
+
+    if (!eventosAgrupados[chaveMesAtual]) {
+      eventosAgrupados[chaveMesAtual] = [];
+    }
+    if (!mesesOrdenados.includes(chaveMesAtual)) {
+      mesesOrdenados.unshift(chaveMesAtual);
+    }
+
     mesesOrdenados.forEach((mesAno) => {
-      if (!eventosAgrupados[mesAno]) eventosAgrupados[mesAno] = [];
+      if (!eventosAgrupados[mesAno]) {
+        eventosAgrupados[mesAno] = [];
+      }
     });
+
     Object.keys(eventosAgrupados).forEach((mesAno) => {
       eventosAgrupados[mesAno].sort((a, b) => new Date(a.date) - new Date(b.date));
     });
-    const chaveMesAtual = `${anoAtual}-${mesAtual}`;
-    if (mesesOrdenados.includes(chaveMesAtual)) {
-      mesesOrdenados.splice(mesesOrdenados.indexOf(chaveMesAtual), 1);
-      mesesOrdenados.unshift(chaveMesAtual);
-    }
+
     return { eventosAgrupados, mesesOrdenados };
   }, [eventos, mesAtual, anoAtual]);
 
@@ -167,7 +176,7 @@ const Calendario = () => {
                 <View className="mt-4">
                   {eventosMesAtual.length > 0 ? (
                     eventosMesAtual.map((item) => (
-                      <Link key={item.date} href={`/edit-consulta`} asChild>
+                      <Link key={item.date} href={`/edit-troca`} asChild>
                         <TouchableOpacity>
                           <View className="flex flex-row py-2 items-center border-b border-gray-200">
                             <View className="w-16 items-center">
