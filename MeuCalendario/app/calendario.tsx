@@ -1,9 +1,11 @@
 import { Link, useRouter } from "expo-router";
 import { Plus } from "lucide-react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Text, View, FlatList, TouchableOpacity, ScrollView } from "react-native";
 import { Calendar, LocaleConfig } from "react-native-calendars";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 
 // Configurar idioma para o calendário
 LocaleConfig.locales['pt'] = {
@@ -26,14 +28,32 @@ LocaleConfig.defaultLocale = 'pt';
 const Calendario = () => {
   const router = useRouter();
 
-  const eventos = [
-    { date: "2025-06-20", title: "Consulta com dentista" },
-    { date: "2025-05-15", title: "Consulta com dentista" },
-    { date: "2025-06-10", title: "Troca de escova de dente" },
-    { date: "2025-06-12", title: "Troca de protetor bucal" },
-    { date: "2025-05-20", title: "Troca de escova de dente" },
-    { date: "2025-07-30", title: "Troca de aparelho dental" },
-  ];
+  const [eventos, setEventos] = useState([]);
+
+  useEffect(() => {
+    const carregarEventos = async () => {
+      const token = await AsyncStorage.getItem("token");
+      const usuarioStr = await AsyncStorage.getItem("usuario");
+      const usuario = JSON.parse(usuarioStr);
+
+      try {
+        const res = await axios.get("http://192.168.0.17:8080/eventos", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const eventosUsuario = res.data.filter(ev => ev.fk_cliente?.id_cliente === usuario.id_cliente);
+        const eventosConvertidos = eventosUsuario.map(ev => ({
+          date: ev.data,
+          title: ev.nome,
+        }));
+        setEventos(eventosConvertidos);
+      } catch (err) {
+        console.error("Erro ao carregar eventos:", err);
+      }
+    };
+
+    carregarEventos();
+  }, []);
 
   const today = new Date().toLocaleDateString("pt-BR", {
     year: "numeric",
@@ -168,7 +188,6 @@ const Calendario = () => {
 
           return (
             <>
-              {/* Mês atual */}
               <View key={chaveMesAtual}>
                 <Text className="text-4xl text-blue-700 text-start pl-2 font-bold">
                   {mesesEmPortugues[mesAtual]} {anoAtual !== anoAtualSistema ? anoAtual : ""}
@@ -200,14 +219,12 @@ const Calendario = () => {
                 </View>
               </View>
 
-              {/* Texto de separação condicional */}
               {outrosMeses.length > 0 && (
                 <Text className="text-left text-gray-500 text-sm mt-10">
                   Próximos eventos
                 </Text>
               )}
 
-              {/* Demais meses */}
               {outrosMeses.map((chave) => {
                 const [ano, mes] = chave.split("-");
                 const eventosMes = eventosPorMes.eventosAgrupados[chave];

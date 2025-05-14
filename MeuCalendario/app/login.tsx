@@ -1,7 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ActivityIndicator, Image } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+  ActivityIndicator,
+  Image,
+} from 'react-native';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
 const Login = () => {
   const router = useRouter();
@@ -11,8 +21,8 @@ const Login = () => {
 
   useEffect(() => {
     const checkLogin = async () => {
-      const usuario = await AsyncStorage.getItem('usuario');
-      if (usuario) {
+      const token = await AsyncStorage.getItem('token');
+      if (token) {
         router.replace('/appOdonto');
       } else {
         setLoading(false);
@@ -22,13 +32,42 @@ const Login = () => {
   }, []);
 
   const handleLogin = async () => {
-    if (email === 'teste@odon.com' && senha === '12345678') {
-      await AsyncStorage.setItem('usuario', JSON.stringify({ email }));
-      router.replace('/appOdonto');
-    } else {
-      Alert.alert('Erro', 'E-mail ou senha incorretos');
+  try {
+    const response = await axios.post('http://192.168.0.17:8080/auth/login', {
+      email: email,
+      password: senha,
+    });
+
+    const token = response.data;
+    await AsyncStorage.setItem('token', token);
+
+    // Requisição para buscar dados do cliente logado
+    const clienteResponse = await axios.get(`http://192.168.0.17:8080/clientes`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    const clientes = clienteResponse.data;
+    const clienteLogado = clientes.find((c) => c.email === email);
+
+    if (!clienteLogado) {
+      Alert.alert('Erro', 'Cliente não encontrado após login.');
+      return;
     }
-  };
+
+    await AsyncStorage.setItem('usuario', JSON.stringify({
+      email: clienteLogado.email,
+      id_cliente: clienteLogado.id_cliente,
+    }));
+
+    router.replace('/appOdonto');
+  } catch (error) {
+  console.log("Erro ao logar:", error.message); // veja a mensagem principal
+  console.log("Detalhes:", error);              // veja todos os detalhes
+  Alert.alert('Erro', 'E-mail ou senha inválidos');
+}
+
+};
+
 
   if (loading) {
     return (
@@ -41,10 +80,10 @@ const Login = () => {
   return (
     <View style={styles.container}>
       <Image
-              source={require('../assets/logo.png')}
-              style={styles.logo}
-              resizeMode="contain"
-            />
+        source={require('../assets/logo.png')}
+        style={styles.logo}
+        resizeMode="contain"
+      />
       <Text style={styles.title}>Login</Text>
       <TextInput
         placeholder="E-mail"
@@ -74,7 +113,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     padding: 20,
     backgroundColor: '#fff',
-    
   },
   logo: {
     width: 200,

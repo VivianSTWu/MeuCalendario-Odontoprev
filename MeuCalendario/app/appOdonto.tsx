@@ -7,7 +7,7 @@ const AppOdonto = () => {
   const router = useRouter();
 
   const handleLogout = async () => {
-    await AsyncStorage.removeItem('usuario');
+    await AsyncStorage.clear();
     router.replace('/login');
   };
 
