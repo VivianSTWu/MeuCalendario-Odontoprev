@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import {
   View,
@@ -12,6 +13,7 @@ import {
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
 
 const Login = () => {
   const router = useRouter();
@@ -32,42 +34,38 @@ const Login = () => {
   }, []);
 
   const handleLogin = async () => {
-  try {
-    const response = await axios.post('http://192.168.0.17:8080/auth/login', {
-      email: email,
-      password: senha,
-    });
-
-    const token = response.data;
-    await AsyncStorage.setItem('token', token);
-
-    // Requisição para buscar dados do cliente logado
-    const clienteResponse = await axios.get(`http://192.168.0.17:8080/clientes`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-
-    const clientes = clienteResponse.data;
-    const clienteLogado = clientes.find((c) => c.email === email);
-
-    if (!clienteLogado) {
-      Alert.alert('Erro', 'Cliente não encontrado após login.');
+    if (!email || !senha) {
+      Alert.alert('Erro', 'Preencha e-mail e senha.');
       return;
     }
 
-    await AsyncStorage.setItem('usuario', JSON.stringify({
-      email: clienteLogado.email,
-      id_cliente: clienteLogado.id_cliente,
-    }));
+    try {
+      console.log('Enviando dados para login:', { email, password: senha });
+      const response = await axios.post('http://192.168.15.174:8080/auth/login', {
+        email,
+        password: senha,
+      });
 
-    router.replace('/appOdonto');
-  } catch (error) {
-  console.log("Erro ao logar:", error.message); // veja a mensagem principal
-  console.log("Detalhes:", error);              // veja todos os detalhes
-  Alert.alert('Erro', 'E-mail ou senha inválidos');
-}
+      const token = response.data;
+      const decoded: any = jwtDecode(token);
 
-};
+      await AsyncStorage.setItem('token', token);
+      await AsyncStorage.setItem(
+        'usuario',
+        JSON.stringify({
+          email: decoded.sub,
+          id_cliente: decoded.id_cliente, // se estiver no token
+          form: decoded.form,
+        })
+      );
 
+      router.replace('/appOdonto');
+    } catch (error) {
+      console.log("Erro ao logar:", error.message);
+      console.log("Detalhes:", error);
+      Alert.alert('Erro', 'E-mail ou senha inválidos');
+    }
+  };
 
   if (loading) {
     return (

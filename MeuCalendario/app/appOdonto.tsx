@@ -1,7 +1,9 @@
+
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { jwtDecode } from 'jwt-decode';
 
 const AppOdonto = () => {
   const router = useRouter();
@@ -12,19 +14,31 @@ const AppOdonto = () => {
   };
 
   const verificarFormulario = async () => {
-    // Aqui você simularia a requisição para saber se o formulário já foi preenchido
-    const resposta = false; // simulado: `true` ou `false` da API
-    if (resposta) {
-      router.push('/calendario');
-    } else {
-      router.push('/form-inicial');
+    try {
+      const token = await AsyncStorage.getItem('token');
+      if (!token) {
+        router.replace('/login');
+        return;
+      }
+
+      const decoded: any = jwtDecode(token);
+      const formPreenchido = decoded.form;
+
+      if (formPreenchido) {
+        router.push('/calendario');
+      } else {
+        router.push('/intro');
+      }
+    } catch (error) {
+      console.error("Erro ao verificar formulário:", error);
+      Alert.alert("Erro", "Não foi possível verificar o status do formulário.");
     }
   };
 
   return (
     <View style={styles.container}>
       <Image
-        source={require('../assets/logo.png')} // coloque seu logo aqui
+        source={require('../assets/logo.png')}
         style={styles.logo}
         resizeMode="contain"
       />
@@ -35,7 +49,7 @@ const AppOdonto = () => {
       </TouchableOpacity>
 
       <TouchableOpacity onPress={handleLogout}>
-        <Text className='text-red-600'>Logout</Text>
+        <Text style={{ color: 'red' }}>Logout</Text>
       </TouchableOpacity>
     </View>
   );
