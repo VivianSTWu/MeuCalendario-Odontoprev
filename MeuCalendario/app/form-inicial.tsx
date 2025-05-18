@@ -10,7 +10,9 @@ import {
 } from "react-native";
 import { Calendar } from "lucide-react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { Link, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import api from "../services/api";
 
 const doencas = [
   { id: 1, text: "Diabetes" },
@@ -19,11 +21,7 @@ const doencas = [
   { id: 4, text: "Doenças autoimunes (como Lúpus e Síndrome de Sjögren)" },
   { id: 5, text: "HIV/AIDS" },
   { id: 6, text: "Câncer de boca" },
-];
-
-const aparelhos = [
-  { id: 7, text: "Aparelho dental/ortodôntico" },
-  { id: 8, text: "Protetor bucal (usado em esportes ou em casos de bruxismo)" },
+  { id: 7, text: "Hipertensão" },
 ];
 
 const escovaOptions = [
@@ -61,23 +59,85 @@ const FormInicial = () => {
     setShow(false);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!date) {
       Alert.alert("Campo obrigatório", "Por favor, selecione a data da última visita ao dentista.");
       return;
     }
+
     if (selectedRadio === null) {
       Alert.alert("Campo obrigatório", "Por favor, selecione uma opção sobre a escova de dentes.");
       return;
     }
-    router.push("/calendario");
+
+    try {
+      console.log("Iniciando submissão do formulário...");
+      const token = await AsyncStorage.getItem('token');
+      const userData = await AsyncStorage.getItem('usuario');
+      const parsed = userData ? JSON.parse(userData) : null;
+
+      if (!token || !parsed?.id_cliente) {
+        Alert.alert("Erro", "Usuário não autenticado.");
+        return;
+      }
+
+      const idCliente = parsed.id_cliente;
+      const headers = { Authorization: `Bearer ${token}` };
+      console.log("Token:", token);
+
+      console.log("Etapa 1: Adicionando doenças...");
+      for (const idDoenca of selected) {
+        if (idDoenca <= 7) {
+          console.log(`POST /cliente/${idCliente}/add-doenca/${idDoenca}`);
+          await api.post(`/cliente/${idCliente}/add-doenca/${idDoenca}`, {}, { headers });
+        }
+      }
+
+      const consultaPayload = {
+        tipo_evento: "CONSULTA",
+        desc_evento: "Consulta Odontológica",
+        dt_evento: date.toISOString().split("T")[0],
+        fk_cliente: { id_cliente: idCliente }
+      };
+      console.log("Etapa 2: Criando evento de consulta...");
+      console.log("Payload:", consultaPayload);
+      await api.post(`/evento`, consultaPayload, { headers });
+
+      const escovaMap = {
+        9: 1,  // Há 1 mês
+        10: 2, // Há 2 meses
+        11: 3, // Há 3 meses ou mais
+        12: 4  // Não me lembro
+      };
+      const meses = escovaMap[selectedRadio] || 3;
+      const dataTroca = new Date();
+      dataTroca.setMonth(dataTroca.getMonth() - meses); // ✅ subtrai para o passado
+
+      const trocaPayload = {
+        tipo_evento: "TROCA",
+        desc_evento: "Troca de escova de dentes",
+        dt_evento: dataTroca.toISOString().split("T")[0],
+        fk_cliente: { id_cliente: idCliente }
+      };
+      console.log("Etapa 3: Criando evento de troca de escova...");
+      console.log("Payload:", trocaPayload);
+      await api.post(`/evento`, trocaPayload, { headers });
+
+      console.log("Etapa final: Atualizando status do formulário...");
+      await api.post(`/cliente/form/fill/${idCliente}`, {}, { headers });
+
+      console.log("Formulário enviado com sucesso!");
+      router.push("/calendario");
+    } catch (err) {
+      console.error("Erro ao enviar formulário:", err);
+      Alert.alert("Erro", "Falha ao enviar as informações.");
+    }
   };
 
   return (
     <ScrollView className="flex-1 pl-6 pr-10 bg-white">
       <Text className="form-question">
-        Quando foi a última vez em que foi ao dentista? Caso não saiba a data
-        exata, tente informar a data mais próxima possível. *
+        Quando foi a última vez em que foi ao dentista? Caso não saiba a data exata, tente informar a data mais próxima possível. *
       </Text>
 
       <TouchableOpacity
@@ -139,22 +199,8 @@ const FormInicial = () => {
       ))}
 
       <Text className="form-question mt-10">
-        Você utiliza algum dos aparelhos abaixo? Se sim, por favor selecione os que se aplicam.
+        Última pergunta: quando você começou a utilizar a escova de dentes que está usando atualmente? *
       </Text>
-      {aparelhos.map((q) => (
-        <TouchableOpacity
-          key={q.id}
-          onPress={() => toggleCheckbox(q.id)}
-          className="flex-row items-start mb-1 py-1.5"
-        >
-          <View
-            className={`w-6 h-6 border-2 rounded-md ${selected.includes(q.id) ? "bg-blue-500 border-blue-500" : "border-gray-500"}`}
-          />
-          <Text className="ml-2 text-lg">{q.text}</Text>
-        </TouchableOpacity>
-      ))}
-
-      <Text className="form-question mt-10">Última pergunta: quando você começou a utilizar a escova de dentes que está usando atualmente? *</Text>
       {escovaOptions.map((q) => (
         <TouchableOpacity
           key={q.id}

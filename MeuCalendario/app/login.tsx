@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import {
   View,
@@ -12,8 +11,8 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
+import api from '../services/api'; // substitui axios
 
 const Login = () => {
   const router = useRouter();
@@ -40,22 +39,26 @@ const Login = () => {
     }
 
     try {
-      console.log('Enviando dados para login:', { email, password: senha });
-      const response = await axios.post('http://192.168.15.174:8080/auth/login', {
+      const response = await api.post('/auth/login', {
         email,
         password: senha,
       });
 
       const token = response.data;
       const decoded: any = jwtDecode(token);
-
       await AsyncStorage.setItem('token', token);
+
+      const infoRes = await api.get('/auth/info', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const cliente = infoRes.data;
+
       await AsyncStorage.setItem(
         'usuario',
         JSON.stringify({
           email: decoded.sub,
-          id_cliente: decoded.id_cliente, // se estiver no token
-          form: decoded.form,
+          id_cliente: cliente.id_cliente,
+          form: cliente.form,
         })
       );
 

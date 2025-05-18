@@ -5,7 +5,7 @@ import React, { useState, useMemo, useEffect } from "react";
 import { Text, View, FlatList, TouchableOpacity, ScrollView } from "react-native";
 import { Calendar, LocaleConfig } from "react-native-calendars";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
+import api from "../services/api"; // substitui import axios
 
 // Configurar idioma para o calendário
 LocaleConfig.locales['pt'] = {
@@ -37,7 +37,7 @@ const Calendario = () => {
       const usuario = JSON.parse(usuarioStr);
 
       try {
-        const res = await axios.get("http://192.168.0.17:8080/eventos", {
+        const res = await api.get("/evento", {
           headers: { Authorization: `Bearer ${token}` },
         });
 
