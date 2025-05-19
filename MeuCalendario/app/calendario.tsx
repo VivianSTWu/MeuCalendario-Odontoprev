@@ -31,29 +31,32 @@ const Calendario = () => {
   const [eventos, setEventos] = useState([]);
 
   useEffect(() => {
-    const carregarEventos = async () => {
-      const token = await AsyncStorage.getItem("token");
-      const usuarioStr = await AsyncStorage.getItem("usuario");
-      const usuario = JSON.parse(usuarioStr);
+  const carregarEventos = async () => {
+    const token = await AsyncStorage.getItem("token");
+    const usuarioStr = await AsyncStorage.getItem("usuario");
+    const usuario = JSON.parse(usuarioStr);
 
-      try {
-        const res = await api.get("/evento", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+    try {
+      const res = await api.get(`/cliente/${usuario.id_cliente}/eventos`, {
+  headers: { Authorization: `Bearer ${token}` },
+});
 
-        const eventosUsuario = res.data.filter(ev => ev.fk_cliente?.id_cliente === usuario.id_cliente);
-        const eventosConvertidos = eventosUsuario.map(ev => ({
-          date: ev.data,
-          title: ev.nome,
-        }));
-        setEventos(eventosConvertidos);
-      } catch (err) {
-        console.error("Erro ao carregar eventos:", err);
-      }
-    };
 
-    carregarEventos();
-  }, []);
+      console.log("Resposta da API:", res.data);
+      const eventosConvertidos = res.data.map(ev => ({
+        date: ev.dt_evento, // <- do backend
+        title: ev.desc_evento, // <- descrição do evento
+      }));
+
+      setEventos(eventosConvertidos);
+    } catch (err) {
+      console.error("Erro ao carregar eventos:", err);
+    }
+  };
+
+  carregarEventos();
+}, []);
+
 
   const today = new Date().toLocaleDateString("pt-BR", {
     year: "numeric",

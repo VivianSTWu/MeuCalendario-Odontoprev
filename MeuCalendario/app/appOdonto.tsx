@@ -1,9 +1,7 @@
-
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { jwtDecode } from 'jwt-decode';
 
 const AppOdonto = () => {
   const router = useRouter();
@@ -15,16 +13,15 @@ const AppOdonto = () => {
 
   const verificarFormulario = async () => {
     try {
-      const token = await AsyncStorage.getItem('token');
-      if (!token) {
+      const userData = await AsyncStorage.getItem('usuario');
+      const parsed = userData ? JSON.parse(userData) : null;
+
+      if (!parsed || parsed.form === undefined) {
         router.replace('/login');
         return;
       }
 
-      const decoded: any = jwtDecode(token);
-      const formPreenchido = decoded.form;
-
-      if (formPreenchido) {
+      if (parsed.form === true) {
         router.push('/calendario');
       } else {
         router.push('/intro');

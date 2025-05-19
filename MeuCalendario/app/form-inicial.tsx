@@ -104,10 +104,10 @@ const FormInicial = () => {
       await api.post(`/evento`, consultaPayload, { headers });
 
       const escovaMap = {
-        9: 1,  // Há 1 mês
-        10: 2, // Há 2 meses
-        11: 3, // Há 3 meses ou mais
-        12: 4  // Não me lembro
+        9: 1,
+        10: 2,
+        11: 3,
+        12: 4
       };
       const meses = escovaMap[selectedRadio] || 3;
       const dataTroca = new Date();
@@ -126,6 +126,9 @@ const FormInicial = () => {
       console.log("Etapa final: Atualizando status do formulário...");
       await api.post(`/cliente/form/fill/${idCliente}`, {}, { headers });
 
+      // ✅ Atualiza o valor local de form para true
+      await AsyncStorage.mergeItem('usuario', JSON.stringify({ form: true }));
+
       console.log("Formulário enviado com sucesso!");
       router.push("/calendario");
     } catch (err) {
@@ -133,6 +136,8 @@ const FormInicial = () => {
       Alert.alert("Erro", "Falha ao enviar as informações.");
     }
   };
+
+
 
   return (
     <ScrollView className="flex-1 pl-6 pr-10 bg-white">
