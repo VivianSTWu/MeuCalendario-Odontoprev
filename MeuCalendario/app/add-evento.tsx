@@ -1,11 +1,14 @@
-import { View, Text, ScrollView, TouchableOpacity, Modal, Platform } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Modal, Platform, Alert } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { Calendar } from 'lucide-react-native';
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { Link, useLocalSearchParams } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import api from "../services/api";
 
 const AddEvento = () => {
   const { dataSelecionada } = useLocalSearchParams();
+  const router = useRouter();
 
   const [date, setDate] = useState(new Date());
   const [tempDate, setTempDate] = useState(new Date());
@@ -13,9 +16,9 @@ const AddEvento = () => {
   const [selectedRadio, setSelectedRadio] = useState<number | null>(null);
 
   const tipoEntrada = [
-    { id: 13, text: "Consulta com dentista" },
-    { id: 14, text: "Troca de protetor bucal" },
-    { id: 15, text: "Troca de escova de dentes" },
+    { id: 13, tipo: "CONSULTA", descricao: "Consulta com dentista" },
+    { id: 14, tipo: "TROCA", descricao: "Troca de protetor bucal" },
+    { id: 15, tipo: "TROCA", descricao: "Troca de escova de dentes" },
   ];
 
   useEffect(() => {
@@ -47,6 +50,47 @@ const AddEvento = () => {
     setShow(false);
   };
 
+  const handleSubmit = async () => {
+    if (selectedRadio === null) {
+      Alert.alert("Erro", "Selecione um tipo de evento.");
+      return;
+    }
+
+    try {
+      const token = await AsyncStorage.getItem("token");
+      const userData = await AsyncStorage.getItem("usuario");
+      const parsed = userData ? JSON.parse(userData) : null;
+
+      if (!token || !parsed?.id_cliente) {
+        Alert.alert("Erro", "Usuário não autenticado.");
+        return;
+      }
+
+      const entradaSelecionada = tipoEntrada.find(e => e.id === selectedRadio);
+
+      const payload = {
+        tipo_evento: entradaSelecionada.tipo,
+        desc_evento: entradaSelecionada.descricao,
+        dt_evento: date.toISOString().split("T")[0],
+        fk_cliente: {
+          id_cliente: parsed.id_cliente
+        }
+      };
+
+      console.log("Enviando evento:", payload);
+
+      await api.post("/evento", payload, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      Alert.alert("Sucesso", "Evento adicionado com sucesso.");
+      router.push("/calendario");
+    } catch (err) {
+      console.error("Erro ao adicionar evento:", err);
+      Alert.alert("Erro", "Não foi possível adicionar o evento.");
+    }
+  };
+
   return (
     <ScrollView className="flex-1 pl-6 pr-10 bg-white">
       <Text className="title">Adicione uma nova entrada</Text>
@@ -62,7 +106,7 @@ const AddEvento = () => {
               <View className="w-3 h-3 rounded-full bg-blue-500" />
             )}
           </View>
-          <Text className="ml-2 text-lg">{q.text}</Text>
+          <Text className="ml-2 text-lg">{q.descricao}</Text>
         </TouchableOpacity>
       ))}
 
@@ -112,11 +156,9 @@ const AddEvento = () => {
         </Modal>
       )}
 
-      <Link href="/calendario" asChild>
-        <TouchableOpacity className="mt-6 p-4 bg-blue-600 rounded-lg items-center">
-          <Text className="text-white text-xl">Adicionar</Text>
-        </TouchableOpacity>
-      </Link>
+      <TouchableOpacity onPress={handleSubmit} className="mt-6 p-4 bg-blue-600 rounded-lg items-center">
+        <Text className='text-white text-xl'>Adicionar</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 };
