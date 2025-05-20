@@ -9,7 +9,12 @@ function EditConsulta() {
     const [tempDate, setTempDate] = useState(new Date());
     const [showDatePicker, setShowDatePicker] = useState(false);
 
-    const [time, setTime] = useState(new Date());
+    const [time, setTime] = useState(() => {
+        const defaultTime = new Date();
+        defaultTime.setHours(12);
+        defaultTime.setMinutes(0);
+        return defaultTime;
+    });
     const [showTimePicker, setShowTimePicker] = useState(false);
 
     const [profissional, setProfissional] = useState();
