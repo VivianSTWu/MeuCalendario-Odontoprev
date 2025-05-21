@@ -16,14 +16,19 @@ const AppOdonto = () => {
       const userData = await AsyncStorage.getItem('usuario');
       const parsed = userData ? JSON.parse(userData) : null;
 
+      console.log("Dados do usuário:", parsed);
+
       if (!parsed || parsed.form === undefined) {
+        Alert.alert("Erro", "Sessão inválida. Faça login novamente.");
         router.replace('/login');
         return;
       }
 
       if (parsed.form === true) {
+        console.log("Form preenchido, redirecionando para /calendario");
         router.push('/calendario');
       } else {
+        console.log("Form não preenchido, redirecionando para /intro");
         router.push('/intro');
       }
     } catch (error) {
@@ -53,6 +58,7 @@ const AppOdonto = () => {
 };
 
 export default AppOdonto;
+
 
 const styles = StyleSheet.create({
   container: {

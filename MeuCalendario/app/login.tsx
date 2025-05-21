@@ -46,19 +46,21 @@ const Login = () => {
 
       const token = response.data;
       const decoded: any = jwtDecode(token);
+      console.log("form", decoded.form);
       await AsyncStorage.setItem('token', token);
 
       const infoRes = await api.get('/auth/info', {
         headers: { Authorization: `Bearer ${token}` },
       });
       const cliente = infoRes.data;
+      console.log("Cliente:", cliente);
 
       await AsyncStorage.setItem(
         'usuario',
         JSON.stringify({
           email: decoded.sub,
           id_cliente: cliente.id_cliente,
-          form: cliente.form,
+          form: decoded.form,
         })
       );
 
