@@ -17,7 +17,7 @@ const AddEvento = () => {
 
   const tipoEntrada = [
     { id: 13, tipo: "CONSULTA", descricao: "Consulta com dentista" },
-    { id: 14, tipo: "TROCA", descricao: "Troca de protetor bucal" },
+    //{ id: 14, tipo: "TROCA", descricao: "Troca de protetor bucal" },
     { id: 15, tipo: "TROCA", descricao: "Troca de escova de dentes" },
   ];
 

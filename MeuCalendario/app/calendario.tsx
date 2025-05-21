@@ -170,6 +170,7 @@ const Calendario = () => {
                 key={item.id_evento}
                 onPress={() => {
                   const rota = item.tipo_evento === "CONSULTA" ? "/edit-consulta" : "/edit-troca";
+                  console.log("id_evento:", item.id_evento)
                   router.push({ pathname: rota, params: { id: item.id_evento } });
                 }}
               >
