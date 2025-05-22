@@ -15,6 +15,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from "../services/api";
 
 const doencas = [
+  { id: 8, text: "Cáries" },
+  { id: 9, text: "Gengivite" },
+  { id: 10, text: "Periodontite" },
   { id: 1, text: "Diabetes" },
   { id: 2, text: "Osteoporose" },
   { id: 3, text: "Doenças Cardiovasculares" },
@@ -30,6 +33,19 @@ const escovaOptions = [
   { id: 11, text: "Há 3 meses ou mais" },
   { id: 12, text: "Não me lembro" },
 ];
+
+const mapIdParaTexto = {
+  1: "Diabetes",
+  2: "Osteoporose",
+  3: "Doenças Cardiovasculares",
+  4: "Doenças autoimunes (como Lúpus e Síndrome de Sjögren)",
+  5: "HIV/AIDS",
+  6: "Câncer de boca",
+  7: "Hipertensão",
+  8: "Cáries",
+  9: "Gengivite",
+  10: "Periodontite"
+};
 
 const FormInicial = () => {
   const router = useRouter();
@@ -71,7 +87,6 @@ const FormInicial = () => {
     }
 
     try {
-      console.log("Iniciando submissão do formulário...");
       const token = await AsyncStorage.getItem('token');
       const userData = await AsyncStorage.getItem('usuario');
       const parsed = userData ? JSON.parse(userData) : null;
@@ -83,61 +98,68 @@ const FormInicial = () => {
 
       const idCliente = parsed.id_cliente;
       const headers = { Authorization: `Bearer ${token}` };
-      console.log("Token:", token);
 
-      console.log("Etapa 1: Adicionando doenças...");
+      // 1. Adiciona doenças
       for (const idDoenca of selected) {
         if (idDoenca <= 7) {
-          console.log(`POST /cliente/${idCliente}/add-doenca/${idDoenca}`);
           await api.post(`/cliente/${idCliente}/add-doenca/${idDoenca}`, {}, { headers });
         }
       }
 
+      // 2. Evento: Consulta
       const consultaPayload = {
         tipo_evento: "CONSULTA",
         desc_evento: "Consulta Odontológica",
         dt_evento: date.toISOString().split("T")[0],
         fk_cliente: { id_cliente: idCliente }
       };
-      console.log("Etapa 2: Criando evento de consulta...");
-      console.log("Payload:", consultaPayload);
       await api.post(`/evento`, consultaPayload, { headers });
 
-      const escovaMap = {
-        9: 1,
-        10: 2,
-        11: 3,
-        12: 4
-      };
+      // 3. Evento: Troca de escova
+      const escovaMap = { 9: 1, 10: 2, 11: 3, 12: 4 };
       const meses = escovaMap[selectedRadio] || 3;
       const dataTroca = new Date();
-      dataTroca.setMonth(dataTroca.getMonth() - meses); // ✅ subtrai para o passado
-
+      dataTroca.setMonth(dataTroca.getMonth() - meses);
       const trocaPayload = {
         tipo_evento: "TROCA",
         desc_evento: "Troca de escova de dentes",
         dt_evento: dataTroca.toISOString().split("T")[0],
         fk_cliente: { id_cliente: idCliente }
       };
-      console.log("Etapa 3: Criando evento de troca de escova...");
-      console.log("Payload:", trocaPayload);
       await api.post(`/evento`, trocaPayload, { headers });
 
-      console.log("Etapa final: Atualizando status do formulário...");
-      await api.post(`/cliente/form/fill/${idCliente}`, {}, { headers });
+      // 4. Calcular próxima consulta
+      const doencasSelecionadas = selected.map(id => mapIdParaTexto[id]).filter(Boolean);
+      const calculoResponse = await api.post("/calculo-consulta", {
+        dataUltimaConsulta: date.toISOString().split("T")[0],
+        doencas: doencasSelecionadas
+      }, { headers });
 
-      // ✅ Atualiza o valor local de form para true
+      const dataProximaConsulta = calculoResponse.data?.dataProximaConsulta;
+      if (dataProximaConsulta) {
+        const eventoRecomendado = {
+          tipo_evento: "RECOMENDACAO",
+          desc_evento: "(Recomendação) Agende sua próxima consulta",
+          dt_evento: dataProximaConsulta,
+          fk_cliente: { id_cliente: idCliente }
+        };
+        console.log("Evento recomendado:", eventoRecomendado);
+        await api.post(`/evento`, eventoRecomendado, { headers });
+
+        await AsyncStorage.setItem("proximaConsulta", dataProximaConsulta);
+      }
+
+
+      // 5. Marcar formulário como preenchido
+      await api.post(`/cliente/form/fill/${idCliente}`, {}, { headers });
       await AsyncStorage.mergeItem('usuario', JSON.stringify({ form: true }));
 
-      console.log("Formulário enviado com sucesso!");
       router.push("/calendario");
     } catch (err) {
       console.error("Erro ao enviar formulário:", err);
       Alert.alert("Erro", "Falha ao enviar as informações.");
     }
   };
-
-
 
   return (
     <ScrollView className="flex-1 pl-6 pr-10 bg-white">

@@ -102,7 +102,7 @@ function EditConsulta() {
 
             const payload = {
                 tipo_evento: "CONSULTA",
-                desc_evento: "Consulta Odontológica",
+                desc_evento: "Consulta com dentista",
                 dt_evento: date.toISOString().split("T")[0],
                 profissional,
                 local_consulta: local,
