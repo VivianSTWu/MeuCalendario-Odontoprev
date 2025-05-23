@@ -96,7 +96,3 @@ MeuCalendario-Odontoprev/ </br>
 Este projeto foi desenvolvido como parte da disciplina de Desenvolvimento Mobile. O foco principal foi construir um MVP funcional para resolver um problema real apresentado pela Odontoprev, promovendo saúde bucal com tecnologia e experiência do usuário.
 
 © 2025 - Grupo KCIAO | FIAP - 2TDSPR
-
-css
-Copiar
-Editar
