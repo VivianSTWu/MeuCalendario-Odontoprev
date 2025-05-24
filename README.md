@@ -53,13 +53,13 @@ A proposta da aplicação é auxiliar os clientes da Odontoprev no cuidado cont�
 
 ### 📦 Instalação
 
-#### 1. Clone o repositório do frontend:
+### 1. Clone o repositório do frontend:
 
 ```bash
 git clone https://github.com/VivianSTWu/MeuCalendario-Odontoprev.git
 ```
 
-#### 2. Na IDE, abra um terminal e entre na pasta MeuCalendario:
+### 2. Na IDE, abra um terminal e entre na pasta MeuCalendario:
 
 ```bash
 cd .\MeuCalendario
@@ -67,7 +67,7 @@ cd .\MeuCalendario
    
 ![image](https://github.com/user-attachments/assets/5df65aa8-8684-4473-9e0d-00e55d30ddb2)
 
-#### 3. Rode o comando para instalar as dependências:
+### 3. Rode o comando para instalar as dependências:
 
 - Se utiliza npm:
 ```bash
@@ -78,27 +78,60 @@ npm install
 yarn
 ```
 
-#### 4. Inicie o projeto:
+### 4. Inicie o projeto:
 
 ```bash
 npx expo start
 ```
 Isso abrirá o servidor Expo, o que permitirá rodar o projeto no emulador ou dispositivo.
 
-#### 5. Troque para o Expo Go (pressione 'S'):
+### 5. Troque para o Expo Go (pressione 'S'):
 
 ![image](https://github.com/user-attachments/assets/f553e31d-a206-43c1-8822-76f03c962424)
 
-#### 6. Abra o projeto
+### 6. Abra o projeto
 Abra o aplicativo em um emulador ou em seu dispositivo móvel, utilizando o aplicativo Expo Go (talvez seja necessário instalá-lo e fazer o login)
 
-#### 7. Na tela de login, utilize essas credenciais:
+### 7. Na tela de login, utilize essas credenciais:
 ```bash
 {
     "email": "larissa@email.com",
     "password": "senha123"
 }
 ```
+---
+
+### ❌ Caso, por algum motivo, o web app com a api esteja fora do ar, siga estes passos:
+
+### A. clone o repositório de backend ([link do repositório](https://gitlab.com/VivianSTWu/meucalendario-api/))
+
+```bash
+git clone https://gitlab.com/VivianSTWu/meucalendario-api.git
+```
+### B. Abra o projeto em uma IDE (recomendamos o IntelliJ) e rode a aplicação (src/main/java/fiap_2tdspr.kciao/KciaoJavaApplication)
+
+![image](https://github.com/user-attachments/assets/4399f39b-a13d-4bde-93ec-a036c3067813)
+
+
+### C. Abra o projeto de frontend (já clonado no passo 1 para a execução da solução), e edite o arquivo **api.ts** (MeuCalendario-Odontoprev/MeuCalendario/services/api.ts)
+
+Altere a linha 
+```bash
+baseURL: 'https://meucalendarioodontoprev.azurewebsites.net', 
+```
+
+por
+```bash
+baseURL: 'http://localhost:8080', 
+```
+
+![image](https://github.com/user-attachments/assets/946d3440-8151-46f3-ade9-5062143b789d)
+
+
+### D. No terminal onde você ligou o servidor do Expo, pressione 'R' para recarregar a aplicação, ou siga os passos 4, 5, 6 e 7 novamente.
+
+
+---
 
 ## 📁 Estrutura de Pastas
 MeuCalendario-Odontoprev/ </br>
