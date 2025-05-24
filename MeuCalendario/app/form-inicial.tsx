@@ -61,6 +61,14 @@ const FormInicial = () => {
     );
   };
 
+  const formatarDataLocal = (date: Date): string => {
+  const ano = date.getFullYear();
+  const mes = (date.getMonth() + 1).toString().padStart(2, '0');
+  const dia = date.getDate().toString().padStart(2, '0');
+  return `${ano}-${mes}-${dia}`; // formato YYYY-MM-DD
+};
+
+
   const onChange = (event, selectedDate) => {
     if (Platform.OS === "android") {
       if (selectedDate) setDate(selectedDate);
@@ -110,7 +118,7 @@ const FormInicial = () => {
       const consultaPayload = {
         tipo_evento: "CONSULTA",
         desc_evento: "Consulta Odontológica",
-        dt_evento: date.toISOString().split("T")[0],
+        dt_evento: formatarDataLocal(date),
         fk_cliente: { id_cliente: idCliente }
       };
       await api.post(`/evento`, consultaPayload, { headers });
@@ -123,15 +131,30 @@ const FormInicial = () => {
       const trocaPayload = {
         tipo_evento: "TROCA",
         desc_evento: "Troca de escova de dentes",
-        dt_evento: dataTroca.toISOString().split("T")[0],
+        dt_evento: formatarDataLocal(dataTroca),
         fk_cliente: { id_cliente: idCliente }
       };
       await api.post(`/evento`, trocaPayload, { headers });
 
+      //3.2 Calcular data de troca
+      const proximaTroca = new Date(dataTroca);
+      proximaTroca.setMonth(proximaTroca.getMonth() + 3);
+
+      const eventoTrocaRecomendada = {
+        tipo_evento: "RECOMENDACAO",
+        desc_evento: "(Recomendação) Troque sua escova de dentes",
+        dt_evento: formatarDataLocal(proximaTroca),
+        fk_cliente: { id_cliente: idCliente }
+      };
+
+      await api.post(`/evento`, eventoTrocaRecomendada, { headers });
+
+
+
       // 4. Calcular próxima consulta
       const doencasSelecionadas = selected.map(id => mapIdParaTexto[id]).filter(Boolean);
       const calculoResponse = await api.post("/calculo-consulta", {
-        dataUltimaConsulta: date.toISOString().split("T")[0],
+        dataUltimaConsulta: formatarDataLocal(date),
         doencas: doencasSelecionadas
       }, { headers });
 
