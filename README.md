@@ -53,13 +53,13 @@ A proposta da aplicação é auxiliar os clientes da Odontoprev no cuidado cont�
 
 ### 📦 Instalação
 
-1. Clone o repositório do frontend:
+#### 1. Clone o repositório do frontend:
 
 ```bash
 git clone https://github.com/VivianSTWu/MeuCalendario-Odontoprev.git
 ```
 
-2. Na IDE, abra um terminal e entre na pasta MeuCalendario:
+#### 2. Na IDE, abra um terminal e entre na pasta MeuCalendario:
 
 ```bash
 cd .\MeuCalendario
@@ -67,7 +67,7 @@ cd .\MeuCalendario
    
 ![image](https://github.com/user-attachments/assets/5df65aa8-8684-4473-9e0d-00e55d30ddb2)
 
-3. Rode o comando para instalar as dependências:
+#### 3. Rode o comando para instalar as dependências:
 
 - Se utiliza npm:
 ```bash
@@ -78,24 +78,24 @@ npm install
 yarn
 ```
 
-4. Inicie o projeto:
+#### 4. Inicie o projeto:
 
 ```bash
 npx expo start
 ```
 Isso abrirá o servidor Expo, o que permitirá rodar o projeto no emulador ou dispositivo.
 
-5. Troque para o Expo Go (pressione 'S'):
+#### 5. Troque para o Expo Go (pressione 'S'):
 
 ![image](https://github.com/user-attachments/assets/f553e31d-a206-43c1-8822-76f03c962424)
 
-6. Abra o projeto
+#### 6. Abra o projeto
 Abra o aplicativo em um emulador ou em seu dispositivo móvel, utilizando o aplicativo Expo Go (talvez seja necessário instalá-lo e fazer o login)
 
-7. Na tela de login, utilize essas credenciais:
+#### 7. Na tela de login, utilize essas credenciais:
 ```bash
 {
-    "email": "matheus@email.com",
+    "email": "larissa@email.com",
     "password": "senha123"
 }
 ```
@@ -114,8 +114,7 @@ MeuCalendario-Odontoprev/ </br>
 - Backend: [JhonatanSampaioF/KCIAOJava](https://gitlab.com/VivianSTWu/meucalendario-api/)
 
 ## 🎥 Vídeos de Apresentação
-- 🗣️ Pitch Inicial: [Youtube](https://www.youtube.com/watch?v=jUbJweG8XMY)
-- 📱 Demonstração da Aplicação: [Youtube](https://www.youtube.com/watch?v=jUbJweG8XMY)
+- 📱 Demonstração da Aplicação: [Youtube](https://youtu.be/ltTQRQdSNnA)
 - 📊 Sprint Final: [Youtube](https://www.youtube.com/watch?v=zd22tz-3sYU)
 
 ## 📌 Considerações Finais
