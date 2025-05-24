@@ -59,14 +59,40 @@ A proposta da aplicação é auxiliar os clientes da Odontoprev no cuidado cont�
 git clone https://github.com/VivianSTWu/MeuCalendario-Odontoprev.git
 ```
 
-2. Clone o repositório do backend:
+2. Na IDE, abra um terminal e entre na pasta MeuCalendario:
 
 ```bash
-git clone https://gitlab.com/VivianSTWu/meucalendario-api/
+cd .\MeuCalendario
+```
+   
+![image](https://github.com/user-attachments/assets/5df65aa8-8684-4473-9e0d-00e55d30ddb2)
+
+3. Rode o comando para instalar as dependências:
+
+- Se utiliza npm:
+```bash
+npm install
+```
+- Se utiliza yarn:
+```bash
+yarn
 ```
 
-3. Execute ambos os projetos e faça login com o usuário:
+4. Inicie o projeto:
 
+```bash
+npx expo start
+```
+Isso abrirá o servidor Expo, o que permitirá rodar o projeto no emulador ou dispositivo.
+
+5. Troque para o Expo Go (pressione 'S'):
+
+![image](https://github.com/user-attachments/assets/f553e31d-a206-43c1-8822-76f03c962424)
+
+6. Abra o projeto
+Abra o aplicativo em um emulador ou em seu dispositivo móvel, utilizando o aplicativo Expo Go (talvez seja necessário instalá-lo e fazer o login)
+
+7. Na tela de login, utilize essas credenciais:
 ```bash
 {
     "email": "matheus@email.com",
